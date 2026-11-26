@@ -1,97 +1,97 @@
-// // 1.1
+// 1.1
 
-// const gmailInput = document.querySelector("#gmail_input");
-// const gmailButton = document.querySelector("#gmail_button");
-// const gmailResult = document.querySelector("#gmail_result");
+const gmailInput = document.querySelector("#gmail_input");
+const gmailButton = document.querySelector("#gmail_button");
+const gmailResult = document.querySelector("#gmail_result");
 
-// const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
-// gmailButton.onclick = () => {
-//   if (gmailRegex.test(gmailInput.value)) {
-//     gmailResult.textContent = "Gmail правильный!";
-//     gmailResult.style.color = "green";
-//   } else {
-//     gmailResult.textContent = "Gmail неправильный!";
-//     gmailResult.style.color = "red";
-//   }
-// };
+gmailButton.onclick = () => {
+  if (gmailRegex.test(gmailInput.value)) {
+    gmailResult.textContent = "Gmail правильный!";
+    gmailResult.style.color = "green";
+  } else {
+    gmailResult.textContent = "Gmail неправильный!";
+    gmailResult.style.color = "red";
+  }
+};
 
-// // 1.2
+// 1.2
 
-// const parentBlock = document.querySelector(".parent_block");
-// const childBlock = document.querySelector(".child_block");
+const parentBlock = document.querySelector(".parent_block");
+const childBlock = document.querySelector(".child_block");
 
-// let positionX = 0;
-// let positionY = 0;
-// let direction = "right";
+let positionX = 0;
+let positionY = 0;
+let direction = "right";
 
-// setInterval(() => {
-//   const maxX = parentBlock.clientWidth - childBlock.offsetWidth;
-//   const maxY = parentBlock.clientHeight - childBlock.offsetHeight;
+setInterval(() => {
+  const maxX = parentBlock.clientWidth - childBlock.offsetWidth;
+  const maxY = parentBlock.clientHeight - childBlock.offsetHeight;
 
-//   if (direction === "right") {
-//     positionX++;
+  if (direction === "right") {
+    positionX++;
 
-//     if (positionX >= maxX) {
-//       direction = "down";
-//     }
-//   } else if (direction === "down") {
-//     positionY++;
+    if (positionX >= maxX) {
+      direction = "down";
+    }
+  } else if (direction === "down") {
+    positionY++;
 
-//     if (positionY >= maxY) {
-//       direction = "left";
-//     }
-//   } else if (direction === "left") {
-//     positionX--;
+    if (positionY >= maxY) {
+      direction = "left";
+    }
+  } else if (direction === "left") {
+    positionX--;
 
-//     if (positionX <= 0) {
-//       direction = "up";
-//     }
-//   } else if (direction === "up") {
-//     positionY--;
+    if (positionX <= 0) {
+      direction = "up";
+    }
+  } else if (direction === "up") {
+    positionY--;
 
-//     if (positionY <= 0) {
-//       direction = "right";
-//     }
-//   }
+    if (positionY <= 0) {
+      direction = "right";
+    }
+  }
 
-//   childBlock.style.left = positionX + "px";
-//   childBlock.style.top = positionY + "px";
-// }, 10);
+  childBlock.style.left = positionX + "px";
+  childBlock.style.top = positionY + "px";
+}, 10);
 
-// // 2
+// 2
 
-// const seconds = document.querySelector("#seconds");
-// const start = document.querySelector("#start");
-// const stop = document.querySelector("#stop");
-// const reset = document.querySelector("#reset");
+const seconds = document.querySelector("#seconds");
+const start = document.querySelector("#start");
+const stop = document.querySelector("#stop");
+const reset = document.querySelector("#reset");
 
-// let counter = 0;
-// let interval = null;
+let counter = 0;
+let interval = null;
 
-// start.addEventListener("click", () => {
-//   if (interval === null) {
-//     interval = setInterval(() => {
-//       counter++;
-//       seconds.textContent = counter;
-//     }, 1000);
-//   }
-// });
+start.addEventListener("click", () => {
+  if (interval === null) {
+    interval = setInterval(() => {
+      counter++;
+      seconds.textContent = counter;
+    }, 1000);
+  }
+});
 
-// stop.addEventListener("click", () => {
-//   clearInterval(interval);
-//   interval = null;
-// });
+stop.addEventListener("click", () => {
+  clearInterval(interval);
+  interval = null;
+});
 
-// reset.addEventListener("click", () => {
-//   clearInterval(interval);
-//   interval = null;
+reset.addEventListener("click", () => {
+  clearInterval(interval);
+  interval = null;
 
-//   counter = 0;
-//   seconds.textContent = counter;
-// });
+  counter = 0;
+  seconds.textContent = counter;
+});
 
-// lesson3
+lesson3
 
 // 1
 
@@ -277,5 +277,108 @@ async function promiseRace() {
 
 promiseRace();
 
+// hw5
 
+const form = document.getElementById("userForm");
+const result = document.getElementById("result");
 
+const url = "https://jsonplaceholder.typicode.com/posts";
+
+function checkAgreement() {
+  const agreement = form.elements.agreement;
+
+  if (!agreement.checked) {
+    result.textContent = "Сначала поставьте галочку согласия!";
+    return false;
+  }
+
+  return true;
+}
+
+function showError(error) {
+  console.log("Ошибка:", error);
+  result.textContent = "Произошла ошибка: " + error.message;
+}
+
+form.addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  if (!checkAgreement()) {
+    return;
+  }
+
+  try {
+    if (!form.reportValidity()) {
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    const user = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+      age: Number(formData.get("age")),
+      gender: formData.get("gender"),
+    };
+
+    result.textContent = "Отправка JSON...";
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+
+    if (!response.ok) {
+      throw new Error("Ошибка сервера: " + response.status);
+    }
+
+    const data = await response.json();
+
+    result.textContent = "JSON успешно отправлен! ID: " + data.id;
+
+    console.log("JSON ответ:", data);
+  } catch (error) {
+    showError(error);
+  }
+});
+
+document
+  .getElementById("formDataBtn")
+  .addEventListener("click", async function () {
+    if (!checkAgreement()) {
+      return;
+    }
+
+    try {
+      if (!form.reportValidity()) {
+        return;
+      }
+
+      const formData = new FormData(form);
+
+      formData.delete("agreement");
+
+      result.textContent = "Отправка FormData...";
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Ошибка сервера: " + response.status);
+      }
+
+      const data = await response.json();
+
+      result.textContent = "FormData успешно отправлен! ID: " + data.id;
+
+      console.log("FormData ответ:", data);
+    } catch (error) {
+      showError(error);
+    }
+  });
